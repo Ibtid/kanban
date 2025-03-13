@@ -1,43 +1,41 @@
 import { useState } from "react";
 import { DndContext } from "@dnd-kit/core";
-import {Column} from "./Column";
-
-
+import { Column } from "./Column";
 
 const COLUMNS = [
-  { id: 'TODO', title: 'To Do' },
-  { id: 'IN_PROGRESS', title: 'In Progress' },
-  { id: 'DONE', title: 'Done' },
+  { id: "TODO", title: "To Do" },
+  { id: "IN_PROGRESS", title: "In Progress" },
+  { id: "DONE", title: "Done" },
 ];
 
 const INITIAL_TASKS = [
   {
-    id: '1',
-    title: 'Research Project',
-    description: 'Gather requirements and create initial documentation',
-    status: 'TODO',
+    id: "1",
+    title: "Research Project",
+    description: "Gather requirements and create initial documentation",
+    status: "TODO",
   },
   {
-    id: '2',
-    title: 'Design System',
-    description: 'Create component library and design tokens',
-    status: 'TODO',
+    id: "2",
+    title: "Design System",
+    description: "Create component library and design tokens",
+    status: "TODO",
   },
   {
-    id: '3',
-    title: 'API Integration',
-    description: 'Implement REST API endpoints',
-    status: 'IN_PROGRESS',
+    id: "3",
+    title: "API Integration",
+    description: "Implement REST API endpoints",
+    status: "IN_PROGRESS",
   },
   {
-    id: '4',
-    title: 'Testing',
-    description: 'Write unit tests for core functionality',
-    status: 'DONE',
+    id: "4",
+    title: "Testing",
+    description: "Write unit tests for core functionality",
+    status: "DONE",
   },
 ];
 
-const KanbanBoard = () =>  {
+const KanbanBoard = ({ showForm, setShowFormFalse, formData, setFormData }) => {
   const [tasks, setTasks] = useState(INITIAL_TASKS);
 
   function handleDragEnd(event) {
@@ -45,7 +43,7 @@ const KanbanBoard = () =>  {
 
     if (!over) return;
 
-    const taskId = active.id
+    const taskId = active.id;
     const newStatus = over.id;
 
     setTasks(() =>
@@ -55,8 +53,8 @@ const KanbanBoard = () =>  {
               ...task,
               status: newStatus,
             }
-          : task,
-      ),
+          : task
+      )
     );
   }
 
@@ -70,6 +68,10 @@ const KanbanBoard = () =>  {
                 key={column.id}
                 column={column}
                 tasks={tasks.filter((task) => task.status === column.id)}
+                showForm={showForm}
+                setShowFormFalse={setShowFormFalse}
+                formData={formData}
+                setFormData={setFormData}
               />
             );
           })}
@@ -77,6 +79,6 @@ const KanbanBoard = () =>  {
       </div>
     </div>
   );
-}
+};
 
 export default KanbanBoard;
