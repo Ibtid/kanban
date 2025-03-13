@@ -1,0 +1,57 @@
+/* Import or Link to Manrope font */
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600&display=swap');
+@import "tailwindcss";
+
+/* Custom Colors */
+:root {
+  --primary-500: #faf5cf;
+  --primary-700: #a37d54;
+  --grayscale-200: #e6e6e6;
+  --grayscale-400: #c4c4c4;
+  --grayscale-700: #2b2b2b;
+  --grayscale-800: #1a1a1a;
+  --grayscale-900: #000;
+}
+
+/* Body styles */
+body {
+  background-color: var(--grayscale-800); /* Custom background color */
+  padding: 1rem; /* p-4 */
+  font-family: 'Manrope', sans-serif; /* Custom font family */
+  color: #ffffff; /* text-white */
+}
+
+/* Button styles */
+button {
+  border-radius: 0.375rem; /* rounded-md */
+  background: linear-gradient(to right, var(--primary-500), var(--primary-700)); /* from-primary-500 to-primary-700 */
+  padding: 0.5rem 1.5rem; /* px-6 py-2 */
+  font-weight: 600; /* font-semibold */
+  color: #000000; /* text-black */
+  transition: opacity 0.3s; /* hover opacity */
+}
+
+button:hover {
+  opacity: 0.5; /* hover:opacity-50 */
+}
+
+button:disabled {
+  background: linear-gradient(to right, var(--grayscale-700), var(--grayscale-700)); /* disabled:from-grayscale-700 to-grayscale-700 */
+  color: #ffffff; /* disabled:text-white */
+  opacity: 0.5; /* disabled:opacity-50 */
+}
+
+/* Input field styles */
+input[type='text'] {
+  border-radius: 0.375rem; /* rounded-md */
+  border: 2px solid var(--grayscale-700); /* border-grayscale-700 */
+  background-color: var(--grayscale-700); /* bg-grayscale-700 */
+  padding: 0.25rem 0.5rem; /* px-2 py-1 */
+  color: #ffffff; /* text-white */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-lg */
+  outline: none; /* outline-none */
+}
+
+input[type='text']:focus {
+  border-color: var(--primary-500); /* focus:border-primary-500 */
+}
