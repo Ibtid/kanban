@@ -3,18 +3,33 @@ import { useState } from "react";
 import KanbanBoard from "./Kanban";
 import KanbanButtons from "./KanbanButtons";
 import Navbar from "./Navbar";
+import AuthForm from "./Login";
+
 
 function App() {
+  
+  return (
+    <>
+     <AuthForm/>
+    </>
+  );
+}
+
+export default App;
+
+
+const TaskManager = () => {
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
     description: "",
     deadline: "",
   });
-  return (
+  return(
     <>
       <Navbar />
       <KanbanButtons
+      showForm={showForm}
         setShowFormTrue={() => {
           setShowForm(true);
         }}
@@ -28,7 +43,5 @@ function App() {
         setFormData={setFormData}
       />
     </>
-  );
+  )
 }
-
-export default App;

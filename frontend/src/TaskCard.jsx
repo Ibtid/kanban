@@ -1,4 +1,5 @@
 import { useDraggable } from '@dnd-kit/core';
+import zIndex from '@mui/material/styles/zIndex';
 
 
 export function TaskCard({ task }) {
@@ -9,6 +10,7 @@ export function TaskCard({ task }) {
   const style = transform
     ? {
         transform: `translate(${transform.x}px, ${transform.y}px)`,
+        zIndex:100000
       }
     : undefined;
 
@@ -22,6 +24,7 @@ export function TaskCard({ task }) {
     >
       <h3 className="font-medium text-neutral-100">{task.title}</h3>
       <p className="mt-2 text-sm text-neutral-400">{task.description}</p>
+      <p className="mt-2 text-xs text-neutral-400">14 March 2025</p>
     </div>
   );
 }
