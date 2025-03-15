@@ -1,18 +1,14 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import * as z from "zod";
 
-const loginSchema = z.object({
-  username: z.string().min(3, "Username must be at least 3 characters"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
-});
 
 const signupSchemas = [
   z.object({
-    username: z.string().min(3, "Username must be at least 3 characters"),
+    email: z.string().email("Provide a valid email"),
   }),
   z.object({
     password: z.string().min(6, "Password must be at least 6 characters"),
@@ -22,67 +18,9 @@ const signupSchemas = [
   }),
 ];
 
-export default function AuthForm() {
-  const [isLogin, setIsLogin] = useState(true);
-  return (
-    <div className="max-w-md mx-auto mt-10 p-6 bg-neutral-800 rounded-xl shadow-lg">
-      <h1 className="text-xl mx-auto w-full text-center">Task Manager</h1>
-      <br />
-      {isLogin ? <LoginForm /> : <SignupForm />}
-      <br />
-      {isLogin ? "Are you a new user?" : "Are you an old user?"}
-      <button
-        className="mt-4 text-primary-500 underline ml-4"
-        onClick={() => setIsLogin(!isLogin)}
-      >
-        {isLogin ? "Switch to Signup" : "Switch to Login"}
-      </button>
-    </div>
-  );
-}
 
-function LoginForm() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isValid },
-  } = useForm({ resolver: zodResolver(loginSchema), mode: "onChange" });
 
-  const onSubmit = (data) => console.log(data);
-
-  return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 flex flex-col">
-      <div>Name</div>
-      <input
-        {...register("username")}
-        placeholder="Type your username"
-        className="border border-gray-400 p-2 rounded-md bg-transparent text-white focus:outline-none"
-      />
-      {errors.username && (
-        <p className="text-red-500">{errors.username.message}</p>
-      )}
-      <div>Password</div>
-      <input
-        type="password"
-        {...register("password")}
-        placeholder="Type your 6-digit password here..."
-        className="border border-gray-400 p-2 rounded-md bg-transparent text-white focus:outline-none"
-      />
-      {errors.password && (
-        <p className="text-red-500">{errors.password.message}</p>
-      )}
-      <button
-        type="submit"
-        disabled={!isValid}
-        className="bg-white text-neutral-900 p-2 rounded-md transition duration-300 hover:bg-primary-500 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-      >
-        Login
-      </button>
-    </form>
-  );
-}
-
-function SignupForm() {
+export function SignupForm() {
   const [step, setStep] = useState(0);
   const [parent] = useAutoAnimate();
   const {
@@ -105,7 +43,7 @@ function SignupForm() {
         }
       })
     ),
-    mode: "onChange",
+    mode: "onBlur",
   });
 
   const onSubmit = (data) => {
@@ -114,7 +52,7 @@ function SignupForm() {
   };
 
   return (
-    <div ref={parent}>
+    <div>
       <div className="h-2 w-full bg-gray-500 rounded mb-4">
         <motion.div
           initial={{ width: `${(step / 2) * 100}%` }}
@@ -124,18 +62,19 @@ function SignupForm() {
       </div>
 
       <br />
-      {step === 0 && <div>Select a username</div>}
+      {step === 0 && <div>Sign up with your email</div>}
       {step === 1 && <div>Select a six-character password</div>}
       {step === 2 && <div>Confirm your password</div>}
       <br />
       <form
+      ref={parent}
         onSubmit={handleSubmit(onSubmit)}
         className="space-y-4 flex flex-col"
       >
         {step === 0 && (
           <input
-            {...register("username")}
-            placeholder="Username"
+            {...register("email")}
+            placeholder="Email"
             className="border border-gray-400 p-2 rounded-md bg-transparent text-white focus:outline-none"
           />
         )}

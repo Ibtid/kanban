@@ -1,48 +1,16 @@
-import { useState } from "react";
-
-import KanbanBoard from "./Kanban";
-import KanbanButtons from "./KanbanButtons";
-import Navbar from "./Navbar";
-import AuthForm from "./Login";
-
+import { BrowserRouter } from "react-router-dom";
+import AppRoutes from "./routes/AppRoutes";
+import { Provider } from "react-redux";
+import store from "./store";
 
 function App() {
-  
   return (
-    <>
-     {/* <AuthForm/> */}
-     <TaskManager/>
-    </>
+    <Provider store={store}>
+      <BrowserRouter>
+        <AppRoutes />
+      </BrowserRouter>
+    </Provider>
   );
 }
 
 export default App;
-
-
-const TaskManager = () => {
-  const [showForm, setShowForm] = useState(false);
-  const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    deadline: "",
-  });
-  return(
-    <>
-      <Navbar />
-      <KanbanButtons
-      showForm={showForm}
-        setShowFormTrue={() => {
-          setShowForm(true);
-        }}
-      />
-      <KanbanBoard
-        showForm={showForm}
-        setShowFormFalse={() => {
-          setShowForm(false);
-        }}
-        formData={formData}
-        setFormData={setFormData}
-      />
-    </>
-  )
-}
