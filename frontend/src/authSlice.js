@@ -46,5 +46,22 @@ export const loginUser = (userData) => async (dispatch) => {
   }
 };
 
+export const registerUser = (userData, navigate) => async (dispatch) => {
+  dispatch(loginStart());
+  try {
+    const response = await axios.post("http://127.0.0.1:8000/api/register", {
+      email: userData.email,
+      password: userData.password,
+      password_confirmation: userData.confirmPassword, // Laravel requires this
+    });
+
+    dispatch(loginSuccess(response.data)); // Assuming you store token after registration
+  } catch (error) {
+    dispatch(loginFailure(error.response?.data || "Registration failed"));
+  }
+};
+
+
+
 
 export default authSlice.reducer;
