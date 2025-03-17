@@ -15,23 +15,19 @@ class AuthController extends Controller {
             'email' => 'required|email|unique:users',
             'password' => 'required|min:6|confirmed'
         ]);
-    
+
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
-    
+
         $user = User::create([
             'email' => $request->email,
             'password' => Hash::make($request->password)
         ]);
-    
-        // Generate JWT Token for the new user
+
         $token = JWTAuth::fromUser($user);
-    
-        return response()->json([
-            'message' => 'User created successfully',
-            'token' => $token
-        ], 201);
+
+        return response()->json(['message' => 'User created successfully', 'token' => $token], 201);
     }
 
     // User Sign-In

@@ -4,33 +4,42 @@ namespace App\Http\Controllers;
 
 use App\Models\Task;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+
 
 class TaskController extends Controller
 {
-    // Get all tasks
+    // Get all tasks for the authenticated user
     public function index()
     {
-        return response()->json(Task::all(), 200);
+        $tasks = Task::where('user_id', Auth::id())->get();
+        return response()->json($tasks, 200);
     }
 
-    // Store a new task
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
+
+        Log::info('Task store request received', $request->all());
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'due_date' => 'nullable|date',
         ]);
-
-        $task = Task::create($validated);
-
+        $task = Task::create([
+            'user_id' => auth()->id(),  // Assign the task to the authenticated user
+            'name' => $validated['name'],
+            'description' => $validated['description'] ?? null,
+            'due_date' => $validated['due_date'] ?? null,
+        ]);
         return response()->json($task, 201);
     }
 
-    // Show a specific task
+
+    // Show a specific task (only if it belongs to the user)
     public function show($id)
     {
-        $task = Task::find($id);
+        $task = Task::where('id', $id)->where('user_id', Auth::id())->first();
 
         if (!$task) {
             return response()->json(['message' => 'Task not found'], 404);
@@ -39,10 +48,10 @@ class TaskController extends Controller
         return response()->json($task, 200);
     }
 
-    // Update a task
+    // Update a task (only if it belongs to the user)
     public function update(Request $request, $id)
     {
-        $task = Task::find($id);
+        $task = Task::where('id', $id)->where('user_id', Auth::id())->first();
 
         if (!$task) {
             return response()->json(['message' => 'Task not found'], 404);
@@ -60,10 +69,10 @@ class TaskController extends Controller
         return response()->json($task, 200);
     }
 
-    // Delete a task
+    // Delete a task (only if it belongs to the user)
     public function destroy($id)
     {
-        $task = Task::find($id);
+        $task = Task::where('id', $id)->where('user_id', Auth::id())->first();
 
         if (!$task) {
             return response()->json(['message' => 'Task not found'], 404);
