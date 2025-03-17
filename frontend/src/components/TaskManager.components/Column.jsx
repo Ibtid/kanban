@@ -17,7 +17,7 @@ export function Column({
   const { setNodeRef } = useDroppable({ id: column.id });
   const [parent] = useAutoAnimate(/* optional config */);
   return (
-    <div className="flex w-80 flex-col rounded-lg bg-neutral-800 p-4">
+    <div className="flex w-full md:w-80 flex-col rounded-lg bg-neutral-800 p-4">
       <h2 className="mb-4 font-semibold text-neutral-100">{column.title}</h2>
 
       {/* Animated Form */}
@@ -78,8 +78,8 @@ export function Column({
       </AnimatePresence>
 
       {/* Task List */}
-      <div ref={setNodeRef} className="flex flex-1 flex-col gap-4">
-        <div ref={parent} className="flex flex-1 flex-col gap-4">
+      <div ref={setNodeRef} className="flex min-h-32 md:flex-1 flex-col gap-4">
+        <div ref={parent} className="flex min-h-32 md:flex-1 flex-col gap-4">
           {tasks.map((task, index) => (
             <motion.div
               key={task.id}

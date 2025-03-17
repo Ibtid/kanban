@@ -2,7 +2,6 @@ import { useState } from "react";
 import { DndContext } from "@dnd-kit/core";
 import { Column } from "./Column";
 
-import { SortableContext, arrayMove } from "@dnd-kit/sortable";
 const COLUMNS = [
   { id: "TODO", title: "To Do" },
   { id: "IN_PROGRESS", title: "In Progress" },
@@ -61,7 +60,7 @@ const KanbanBoard = ({ showForm, setShowFormFalse, formData, setFormData }) => {
 
   return (
     <div className="p-4">
-      <div className="flex gap-8">
+      <div className="flex gap-8 flex-col md:flex-row">
         <DndContext onDragEnd={handleDragEnd}>
           {COLUMNS.map((column) => {
             return (
