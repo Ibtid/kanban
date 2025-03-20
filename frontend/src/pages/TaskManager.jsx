@@ -5,29 +5,29 @@ import KanbanButtons from "../components/TaskManager.components/KanbanButtons";
 import Navbar from "../components/TaskManager.components/Navbar";
 
 export const TaskManager = () => {
-    const [showForm, setShowForm] = useState(false);
-    const [formData, setFormData] = useState({
-      title: "",
-      description: "",
-      deadline: "",
-    });
-    return(
-      <>
-        <Navbar />
-        <KanbanButtons
+  const [showForm, setShowForm] = useState(false);
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+    deadline: "",
+  });
+  return (
+    <>
+      <Navbar />
+      <KanbanButtons
         showForm={showForm}
-          setShowFormTrue={() => {
-            setShowForm(true);
-          }}
-        />
-        <KanbanBoard
-          showForm={showForm}
-          setShowFormFalse={() => {
-            setShowForm(false);
-          }}
-          formData={formData}
-          setFormData={setFormData}
-        />
-      </>
-    )
-  }
+        setShowFormTrue={() => {
+          setShowForm(true);
+        }}
+      />
+      <KanbanBoard
+        showForm={showForm}
+        setShowFormFalse={() => {
+          setShowForm(false);
+        }}
+        formData={formData}
+        setFormData={setFormData}
+      />
+    </>
+  );
+};

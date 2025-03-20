@@ -3,26 +3,53 @@ import { useRef, useEffect } from "react";
 import { useDroppable } from "@dnd-kit/core";
 import { TaskCard } from "./TaskCard";
 import { motion, AnimatePresence } from "framer-motion";
-import autoAnimate from "@formkit/auto-animate";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
+
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { z } from "zod";
+import { useDispatch, useSelector } from "react-redux";
+import { createTask } from "../../taskSlice";
+
+const taskSchema = z.object({
+  name: z.string().min(3, "Title must be at least 3 characters"),
+  description: z.string().min(5, "Description must be at least 5 characters"),
+  due_date: z.string().refine((date) => !isNaN(Date.parse(date)), {
+    message: "Invalid date format",
+  }),
+});
 
 export function Column({
   column,
   tasks,
   showForm,
   setShowFormFalse,
-  formData,
-  setFormData,
 }) {
+  const dispatch = useDispatch();
+  const { register, handleSubmit, formState: { errors }, reset } = useForm({
+    resolver: zodResolver(taskSchema),
+  });
   const { setNodeRef } = useDroppable({ id: column.id });
-  const [parent] = useAutoAnimate(/* optional config */);
+  const [parent] = useAutoAnimate();
+  const token = useSelector((state) => state.auth.token);
+
+  const onSubmit = async (data) => {
+    try {
+      await dispatch(createTask(data)); 
+      reset();
+      setShowFormFalse();
+    } catch (error) {
+      console.error("Failed to create task:", error);
+    }
+  };
+
   return (
     <div className="flex w-full md:w-80 flex-col rounded-lg bg-neutral-800 p-4">
       <h2 className="mb-4 font-semibold text-neutral-100">{column.title}</h2>
 
-      {/* Animated Form */}
       <AnimatePresence>
-        {showForm && column.id == "TODO" && (
+        {showForm && column.id === "To Do" && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
@@ -30,54 +57,50 @@ export function Column({
             transition={{ duration: 0.3 }}
             className="overflow-hidden bg-neutral-800 border-2 border-neutral-700 p-4 rounded-lg shadow-md mb-4"
           >
-            <input
-              type="text"
-              placeholder="Title"
-              className="w-full mb-2 p-2 rounded bg-neutral-700 text-white outline-none"
-              value={formData.title}
-              onChange={(e) =>
-                setFormData({ ...formData, title: e.target.value })
-              }
-            />
-            <textarea
-              placeholder="Description"
-              className="w-full mb-1 p-2 rounded bg-neutral-700 text-white outline-none"
-              value={formData.description}
-              onChange={(e) =>
-                setFormData({ ...formData, description: e.target.value })
-              }
-            />
-            <input
-              type="date"
-              className="w-full mb-2 p-2 rounded bg-neutral-700 text-white outline-none"
-              value={formData.deadline}
-              onChange={(e) =>
-                setFormData({ ...formData, deadline: e.target.value })
-              }
-            />
-            {/* Buttons */}
-            <div className="flex space-x-2">
-              <button
-                className="px-4 py-2 bg-blue-500 rounded text-white hover:bg-blue-600 transition"
-                onClick={() => {
-                  setShowFormFalse();
-                  console.log("Saved Task:", formData);
-                }}
-              >
-                Save
-              </button>
-              <button
-                className="px-4 py-2 bg-gray-500 rounded text-white hover:bg-gray-600 transition"
-                onClick={() => setShowFormFalse()}
-              >
-                Cancel
-              </button>
-            </div>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <input
+                type="text"
+                placeholder="Title"
+                {...register("name")}
+                className="w-full mb-2 p-2 rounded bg-neutral-700 text-white outline-none"
+              />
+              {errors.name && <p className="text-red-500">{errors.title.message}</p>}
+
+              <textarea
+                placeholder="Description"
+                {...register("description")}
+                className="w-full mb-2 p-2 rounded bg-neutral-700 text-white outline-none"
+              />
+              {errors.description && <p className="text-red-500">{errors.description.message}</p>}
+
+              <input
+                type="date"
+                {...register("due_date")}
+                className="w-full mb-2 p-2 rounded bg-neutral-700 text-white outline-none"
+              />
+              {errors.due_date && <p className="text-red-500">{errors.deadline.message}</p>}
+
+              {/* Buttons */}
+              <div className="flex space-x-2">
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-blue-500 rounded text-white hover:bg-blue-600 transition"
+                >
+                  Save
+                </button>
+                <button
+                  type="button"
+                  className="px-4 py-2 bg-gray-500 rounded text-white hover:bg-gray-600 transition"
+                  onClick={setShowFormFalse}
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Task List */}
       <div ref={setNodeRef} className="flex min-h-32 md:flex-1 flex-col gap-4">
         <div ref={parent} className="flex min-h-32 md:flex-1 flex-col gap-4">
           {tasks.map((task, index) => (

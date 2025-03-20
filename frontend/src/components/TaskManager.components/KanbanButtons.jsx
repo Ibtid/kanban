@@ -58,10 +58,10 @@ export function KanbanButtons({ showForm, setShowFormTrue, setFilter, setSort })
         className={`flex items-center bg-blue-600 text-white px-3 py-1.5 rounded-md cursor-pointer hover:bg-blue-700 transition ${
           showForm && "opacity-0"
         }`}
-        onClick={setShowFormTrue}
+        onClick={()=>setShowFormTrue()}
       >
-        <PlusCircle className="w-5 h-5 mr-1" />
-        Add task
+        <PlusCircle className="w-5 h-5" />
+        <span className="hidden md:inline ml-1">Add task</span>
       </button>
 
       {/* Filter & Sort Buttons */}
@@ -74,25 +74,15 @@ export function KanbanButtons({ showForm, setShowFormTrue, setFilter, setSort })
             }`}
             onClick={() => setShowFilter(!showFilter)}
           >
-            <Filter className="w-5 h-5 mr-1" />
-            Filter
+            <Filter className="w-5 h-5" />
+            <span className="hidden md:inline ml-1">Filter</span>
           </button>
 
           {/* Filter Dropdown */}
           {showFilter && (
-            <motion.div
-              initial={{ height: 0, opacity: 1 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 1 }}
-              transition={{ duration: 0.3 }}
-              className="absolute overflow-hidden right-0 top-12 bg-gray-900 rounded-lg shadow-lg p-3 w-48 text-white"
-            >
+            <motion.div className="absolute overflow-hidden right-0 top-12 bg-gray-900 rounded-lg shadow-lg p-3 w-48 text-white">
               {filters.map((item, index) => (
-                <div
-                  key={index}
-                  className="flex items-center space-x-3 px-3 py-2 hover:bg-gray-700 rounded-md cursor-pointer"
-                  onClick={() => handleFilterChange(item.label)}
-                >
+                <div key={index} className="flex items-center space-x-3 px-3 py-2 hover:bg-gray-700 rounded-md cursor-pointer">
                   <input
                     type="checkbox"
                     checked={selectedFilters.includes(item.label)}
@@ -115,23 +105,15 @@ export function KanbanButtons({ showForm, setShowFormTrue, setFilter, setSort })
             }`}
             onClick={() => setShowSort(!showSort)}
           >
-            <SortAsc className="w-5 h-5 mr-1" />
-            Sort
+            <SortAsc className="w-5 h-5" />
+            <span className="hidden md:inline ml-1">Sort</span>
           </button>
 
           {/* Sort Dropdown */}
           {showSort && (
-            <motion.div
-              initial={{ height: 0, opacity: 1 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 1 }}
-              transition={{ duration: 0.3 }}
-              className="absolute overflow-hidden right-0 top-12 bg-gray-900 rounded-lg shadow-lg p-3 w-48 text-white"
-            >
+            <motion.div className="absolute overflow-hidden right-0 top-12 bg-gray-900 rounded-lg shadow-lg p-3 w-48 text-white">
               {sorts.map((item, index) => (
-                <div
-                  key={index}
-                  className={`flex items-center space-x-3 px-3 py-2 rounded-md cursor-pointer ${
+                <div key={index} className={`flex items-center space-x-3 px-3 py-2 rounded-md cursor-pointer ${
                     selectedSort === item.label ? "bg-gray-700" : "hover:bg-gray-700"
                   }`}
                   onClick={() => handleSortChange(item.label)}
