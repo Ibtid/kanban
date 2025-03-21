@@ -64,7 +64,7 @@ export function Column({
                 {...register("name")}
                 className="w-full mb-2 p-2 rounded bg-neutral-700 text-white outline-none"
               />
-              {errors.name && <p className="text-red-500">{errors.title.message}</p>}
+              {errors.name && <p className="text-red-500">{errors.name.message}</p>}
 
               <textarea
                 placeholder="Description"
@@ -78,7 +78,7 @@ export function Column({
                 {...register("due_date")}
                 className="w-full mb-2 p-2 rounded bg-neutral-700 text-white outline-none"
               />
-              {errors.due_date && <p className="text-red-500">{errors.deadline.message}</p>}
+              {errors.due_date && <p className="text-red-500">{errors.due_date.message}</p>}
 
               {/* Buttons */}
               <div className="flex space-x-2">
@@ -119,3 +119,5 @@ export function Column({
     </div>
   );
 }
+
+

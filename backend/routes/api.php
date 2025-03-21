@@ -10,5 +10,11 @@ Route::post('login', [AuthController::class, 'login']);
 
 Route::middleware('auth:api')->group(function () {
     Route::get('me', [AuthController::class, 'me']);
+
+    // Standard CRUD routes
     Route::apiResource('tasks', TaskController::class);
+
+    // Custom routes for filtering & sorting
+    Route::get('filter', [TaskController::class, 'filterTasks']);
+    Route::get('sort', [TaskController::class, 'sortTasks']);
 });

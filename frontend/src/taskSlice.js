@@ -61,6 +61,30 @@ const tasksSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
+    filterTasksStart: (state) => {
+      state.loading = true;
+      state.error = null;
+    },
+    filterTasksSuccess: (state, action) => {
+      state.loading = false;
+      state.tasks = action.payload;
+    },
+    filterTasksFailure: (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
+    sortTasksStart: (state) => {
+      state.loading = true;
+      state.error = null;
+    },
+    sortTasksSuccess: (state, action) => {
+      state.loading = false;
+      state.tasks = action.payload;
+    },
+    sortTasksFailure: (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
   },
 });
 
@@ -77,6 +101,12 @@ export const {
   deleteTaskStart,
   deleteTaskSuccess,
   deleteTaskFailure,
+  filterTasksStart,
+  filterTasksSuccess,
+  filterTasksFailure,
+  sortTasksStart,
+  sortTasksSuccess,
+  sortTasksFailure,
 } = tasksSlice.actions;
 
 // Fetch tasks
@@ -131,6 +161,38 @@ export const deleteTask = (taskId) => async (dispatch, getState) => {
     dispatch(deleteTaskSuccess(taskId));
   } catch (error) {
     dispatch(deleteTaskFailure(error.response?.data?.message || "Failed to delete task"));
+  }
+};
+
+
+// Filter Tasks by Status
+export const filterTasks = (status) => async (dispatch, getState) => {
+  dispatch(filterTasksStart());
+  try {
+    const token = getState().auth.token;
+    const response = await axios.get(`http://127.0.0.1:8000/api/filter?status=${status}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    dispatch(filterTasksSuccess(response.data));
+  } catch (error) {
+    dispatch(filterTasksFailure(error.response?.data?.message || "Failed to filter tasks"));
+  }
+};
+
+// Sort Tasks by Date
+export const sortTasks = (sortBy, sortOrder = "asc") => async (dispatch, getState) => {
+  dispatch(sortTasksStart());
+  try {
+    const token = getState().auth.token;
+    const response = await axios.get(
+      `http://127.0.0.1:8000/api/sort?sort_by=${sortBy}&sort_order=${sortOrder}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+    dispatch(sortTasksSuccess(response.data));
+  } catch (error) {
+    dispatch(sortTasksFailure(error.response?.data?.message || "Failed to sort tasks"));
   }
 };
 

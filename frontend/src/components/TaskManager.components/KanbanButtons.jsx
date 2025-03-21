@@ -1,12 +1,11 @@
 import { useState, useRef, useEffect } from "react";
-import { Filter, SortAsc, Calendar, User, Clock, ThumbsUp, Type, PlusCircle, ThumbsDown, ArrowUp } from "lucide-react";
+import { useDispatch } from "react-redux";
+import { filterTasks, sortTasks } from "../../taskSlice";
+import { Filter, SortAsc, Calendar, PlusCircle, ThumbsUp, ThumbsDown } from "lucide-react";
+import { motion } from "framer-motion";
 
-import { motion, AnimatePresence } from "framer-motion";
-import autoAnimate from "@formkit/auto-animate";
-import { useAutoAnimate } from "@formkit/auto-animate/react";
-
-
-export function KanbanButtons({ showForm, setShowFormTrue, setFilter, setSort }) {
+export function KanbanButtons({ showForm, setShowFormTrue }) {
+  const dispatch = useDispatch();
   const [showFilter, setShowFilter] = useState(false);
   const [showSort, setShowSort] = useState(false);
   const [selectedFilters, setSelectedFilters] = useState([]);
@@ -24,16 +23,15 @@ export function KanbanButtons({ showForm, setShowFormTrue, setFilter, setSort })
         setShowSort(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const filters = [
     { label: "All", value: "all", icon: Filter },
-    { label: "Incomplete", value: "incomplete", icon: ThumbsDown },
-    { label: "Completed", value: "completed", icon: ThumbsUp },
-    { label: "Due Soon", value: "due", icon: Calendar },
+    { label: "To Do", value: "To Do", icon: ThumbsDown },
+    { label: "In Progress", value: "In Progress", icon: ThumbsUp },
+    { label: "Done", value: "Done", icon: Calendar },
   ];
 
   const sorts = [
@@ -41,14 +39,20 @@ export function KanbanButtons({ showForm, setShowFormTrue, setFilter, setSort })
     { label: "Due Date", value: "dueDate", icon: Calendar },
   ];
 
+  // Handle Filter Change
   const handleFilterChange = (filter) => {
-    setSelectedFilters((prev) =>
-      prev.includes(filter) ? prev.filter((f) => f !== filter) : [...prev, filter]
-    );
+    const updatedFilters = selectedFilters.includes(filter)
+      ? selectedFilters.filter((f) => f !== filter)
+      : [...selectedFilters, filter];
+
+    setSelectedFilters(updatedFilters);
+    dispatch(filterTasks(updatedFilters.length ? updatedFilters.join(",") : "all"));
   };
 
+  // Handle Sort Change
   const handleSortChange = (sort) => {
     setSelectedSort(sort);
+    dispatch(sortTasks(sort, "asc")); // Default sorting order
   };
 
   return (
@@ -58,7 +62,7 @@ export function KanbanButtons({ showForm, setShowFormTrue, setFilter, setSort })
         className={`flex items-center bg-blue-600 text-white px-3 py-1.5 rounded-md cursor-pointer hover:bg-blue-700 transition ${
           showForm && "opacity-0"
         }`}
-        onClick={()=>setShowFormTrue()}
+        onClick={setShowFormTrue}
       >
         <PlusCircle className="w-5 h-5" />
         <span className="hidden md:inline ml-1">Add task</span>
@@ -81,12 +85,15 @@ export function KanbanButtons({ showForm, setShowFormTrue, setFilter, setSort })
           {/* Filter Dropdown */}
           {showFilter && (
             <motion.div className="absolute overflow-hidden right-0 top-12 bg-gray-900 rounded-lg shadow-lg p-3 w-48 text-white">
-              {filters.map((item, index) => (
-                <div key={index} className="flex items-center space-x-3 px-3 py-2 hover:bg-gray-700 rounded-md cursor-pointer">
+              {filters.map((item) => (
+                <div
+                  key={item.value}
+                  className="flex items-center space-x-3 px-3 py-2 hover:bg-gray-700 rounded-md cursor-pointer"
+                >
                   <input
                     type="checkbox"
-                    checked={selectedFilters.includes(item.label)}
-                    onChange={() => handleFilterChange(item.label)}
+                    checked={selectedFilters.includes(item.value)}
+                    onChange={() => handleFilterChange(item.value)}
                     className="w-4 h-4 accent-blue-500 cursor-pointer"
                   />
                   <item.icon className="w-5 h-5 text-gray-400" />
@@ -112,11 +119,13 @@ export function KanbanButtons({ showForm, setShowFormTrue, setFilter, setSort })
           {/* Sort Dropdown */}
           {showSort && (
             <motion.div className="absolute overflow-hidden right-0 top-12 bg-gray-900 rounded-lg shadow-lg p-3 w-48 text-white">
-              {sorts.map((item, index) => (
-                <div key={index} className={`flex items-center space-x-3 px-3 py-2 rounded-md cursor-pointer ${
-                    selectedSort === item.label ? "bg-gray-700" : "hover:bg-gray-700"
+              {sorts.map((item) => (
+                <div
+                  key={item.value}
+                  className={`flex items-center space-x-3 px-3 py-2 rounded-md cursor-pointer ${
+                    selectedSort === item.value ? "bg-gray-700" : "hover:bg-gray-700"
                   }`}
-                  onClick={() => handleSortChange(item.label)}
+                  onClick={() => handleSortChange(item.value)}
                 >
                   <item.icon className="w-5 h-5 text-gray-400" />
                   <span>{item.label}</span>
