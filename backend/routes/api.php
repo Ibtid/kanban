@@ -17,4 +17,5 @@ Route::middleware('auth:api')->group(function () {
     // Custom routes for filtering & sorting
     Route::get('filter', [TaskController::class, 'filterTasks']);
     Route::get('sort', [TaskController::class, 'sortTasks']);
+    Route::get('search', [TaskController::class, 'searchTasks']);
 });

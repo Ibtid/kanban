@@ -1,16 +1,11 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser } from "../../authSlice";
+import { loginUser } from "../../redux/authSlice";
 import { useNavigate } from "react-router-dom";
-import * as z from "zod";
 import { useEffect } from "react";
 import UiPaths from "../../paths/uiPaths";
-
-const loginSchema = z.object({
-  email: z.string().email("Please provide a valid email"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
-});
+import { loginSchema } from "./validationSchema/loginSchema";
 
 export function LoginForm() {
   const dispatch = useDispatch();

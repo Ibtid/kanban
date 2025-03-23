@@ -3,21 +3,11 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { registerUser } from "../../authSlice"; // Import register action
+import { registerUser } from "../../redux/authSlice"; // Import register action
 import * as z from "zod";
 import UiPaths from "../../paths/uiPaths";
+import { signupSchemas } from "./validationSchema/signupSchema";
 
-const signupSchemas = [
-  z.object({
-    email: z.string().email("Provide a valid email"),
-  }),
-  z.object({
-    password: z.string().min(6, "Password must be at least 6 characters"),
-  }),
-  z.object({
-    confirmPassword: z.string(),
-  }),
-];
 
 export function SignupForm() {
   const [step, setStep] = useState(0);

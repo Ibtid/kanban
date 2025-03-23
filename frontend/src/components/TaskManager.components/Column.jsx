@@ -10,7 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { z } from "zod";
 import { useDispatch, useSelector } from "react-redux";
-import { createTask } from "../../taskSlice";
+import { createTask } from "../../redux/taskSlice";
 
 const taskSchema = z.object({
   name: z.string().min(3, "Title must be at least 3 characters"),
@@ -20,23 +20,23 @@ const taskSchema = z.object({
   }),
 });
 
-export function Column({
-  column,
-  tasks,
-  showForm,
-  setShowFormFalse,
-}) {
+export function Column({ column, tasks, showForm, setShowFormFalse }) {
   const dispatch = useDispatch();
-  const { register, handleSubmit, formState: { errors }, reset } = useForm({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm({
     resolver: zodResolver(taskSchema),
   });
   const { setNodeRef } = useDroppable({ id: column.id });
   const [parent] = useAutoAnimate();
-  const token = useSelector((state) => state.auth.token);
-
+ 
+  const dropdownOpen = useSelector((state) => state.tasks.dropdownOpen);
   const onSubmit = async (data) => {
     try {
-      await dispatch(createTask(data)); 
+      await dispatch(createTask(data));
       reset();
       setShowFormFalse();
     } catch (error) {
@@ -64,21 +64,27 @@ export function Column({
                 {...register("name")}
                 className="w-full mb-2 p-2 rounded bg-neutral-700 text-white outline-none"
               />
-              {errors.name && <p className="text-red-500">{errors.name.message}</p>}
+              {errors.name && (
+                <p className="text-red-500">{errors.name.message}</p>
+              )}
 
               <textarea
                 placeholder="Description"
                 {...register("description")}
                 className="w-full mb-2 p-2 rounded bg-neutral-700 text-white outline-none"
               />
-              {errors.description && <p className="text-red-500">{errors.description.message}</p>}
+              {errors.description && (
+                <p className="text-red-500">{errors.description.message}</p>
+              )}
 
               <input
                 type="date"
                 {...register("due_date")}
                 className="w-full mb-2 p-2 rounded bg-neutral-700 text-white outline-none"
               />
-              {errors.due_date && <p className="text-red-500">{errors.due_date.message}</p>}
+              {errors.due_date && (
+                <p className="text-red-500">{errors.due_date.message}</p>
+              )}
 
               {/* Buttons */}
               <div className="flex space-x-2">
@@ -100,9 +106,14 @@ export function Column({
           </motion.div>
         )}
       </AnimatePresence>
-
-      <div ref={setNodeRef} className="flex min-h-32 md:flex-1 flex-col gap-4">
-        <div ref={parent} className="flex min-h-32 md:flex-1 flex-col gap-4">
+      <div
+        ref={dropdownOpen ? undefined : setNodeRef}
+        className="flex min-h-32 md:flex-1 flex-col gap-4"
+      >
+        <div
+          ref={dropdownOpen ? undefined : parent}
+          className="flex min-h-32 md:flex-1 flex-col gap-4"
+        >
           {tasks.map((task, index) => (
             <motion.div
               key={task.id}
@@ -119,5 +130,3 @@ export function Column({
     </div>
   );
 }
-
-

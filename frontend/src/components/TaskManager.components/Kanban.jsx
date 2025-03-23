@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchTasks, updateTask, deleteTask } from "../../taskSlice";
+import { fetchTasks, updateTask, deleteTask } from "../../redux/taskSlice";
 import { DndContext } from "@dnd-kit/core";
 import { Column } from "./Column";
 import TrashZone from "./TrashZone";

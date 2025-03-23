@@ -132,4 +132,21 @@ class TaskController extends Controller
 
         return response()->json(['message' => 'Task deleted'], 200);
     }
+
+    public function searchTasks(Request $request)
+    {
+       
+        $searchQuery = $request->query('query');
+        
+       
+        if (!$searchQuery) {
+            return response()->json(['message' => 'Query parameter is required'], 400);
+        }
+    
+        $tasks = Task::where('user_id', auth()->id()) // Only search tasks of the authenticated user
+            ->where('name', 'LIKE', '%' . $searchQuery . '%') // Search for substring in the name
+            ->get();
+    
+        return response()->json($tasks);
+    }    
 }

@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { filterTasks, sortTasks } from "../../taskSlice";
+import { filterTasks, sortTasks } from "../../redux/taskSlice";
 import { Filter, SortAsc, Calendar, PlusCircle, ThumbsUp, ThumbsDown } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -35,8 +35,8 @@ export function KanbanButtons({ showForm, setShowFormTrue }) {
   ];
 
   const sorts = [
-    { label: "Start Date", value: "startDate", icon: Calendar },
-    { label: "Due Date", value: "dueDate", icon: Calendar },
+    { label: "Created Date", value: "created_at", icon: Calendar },
+    { label: "Due Date", value: "due_date", icon: Calendar },
   ];
 
   // Handle Filter Change
@@ -54,6 +54,8 @@ export function KanbanButtons({ showForm, setShowFormTrue }) {
     setSelectedSort(sort);
     dispatch(sortTasks(sort, "asc")); // Default sorting order
   };
+
+  
 
   return (
     <div className="flex justify-between items-center p-4 relative">
@@ -84,7 +86,7 @@ export function KanbanButtons({ showForm, setShowFormTrue }) {
 
           {/* Filter Dropdown */}
           {showFilter && (
-            <motion.div className="absolute overflow-hidden right-0 top-12 bg-gray-900 rounded-lg shadow-lg p-3 w-48 text-white">
+            <motion.div className="z-10000 absolute overflow-hidden right-0 top-12 bg-gray-900 rounded-lg shadow-lg p-3 w-48 text-white">
               {filters.map((item) => (
                 <div
                   key={item.value}
@@ -118,7 +120,7 @@ export function KanbanButtons({ showForm, setShowFormTrue }) {
 
           {/* Sort Dropdown */}
           {showSort && (
-            <motion.div className="absolute overflow-hidden right-0 top-12 bg-gray-900 rounded-lg shadow-lg p-3 w-48 text-white">
+            <motion.div className="z-10000 absolute overflow-hidden right-0 top-12 bg-gray-900 rounded-lg shadow-lg p-3 w-48 text-white">
               {sorts.map((item) => (
                 <div
                   key={item.value}

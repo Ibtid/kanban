@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useDraggable } from "@dnd-kit/core";
 import { useDispatch } from "react-redux";
-import { updateTask } from "../../taskSlice";
+import { updateTask } from "../../redux/taskSlice";
 
 export function TaskCard({ task }) {
   const { attributes, listeners, setNodeRef, transform, isDragging } =
@@ -21,7 +21,8 @@ export function TaskCard({ task }) {
       ? `translate(${transform.x}px, ${transform.y}px)`
       : undefined,
     backgroundColor: isDragging ? "rgb(51, 65, 85)" : "rgb(46, 46, 46)",
-    zIndex: isDragging ? 9999 : 1,
+    zIndex: isDragging ? 1001 : "auto", // Lower z-index but still above normal elements
+    position: isDragging ? "absolute" : "relative", // Helps with layering
     boxShadow: isDragging ? "0 4px 10px rgba(0, 0, 0, 0.2)" : "none",
   };
 
@@ -156,7 +157,7 @@ export function TaskCard({ task }) {
             className="mt-2 text-xs text-neutral-400 cursor-pointer"
             onClick={() => setIsEditing("due_date")}
           >
-            {editedTask.due_date}
+            {formatDate(editedTask.due_date)}
           </p>
         )}
       </div>
@@ -167,7 +168,7 @@ export function TaskCard({ task }) {
         ref={setNodeRef}
         {...listeners}
         {...attributes}
-        className="cursor-grab rounded-lg p-4 shadow-sm hover:shadow-md transition-colors duration-200"
+        className={`cursor-grab rounded-lg p-4 shadow-sm hover:shadow-md transition-colors duration-200 ${isDragging && "w-full"}`}
         style={style}
       >
         <h3
@@ -192,9 +193,18 @@ export function TaskCard({ task }) {
           className="mt-2 text-xs text-neutral-400 cursor-pointer"
           onClick={() => setIsEditing("due_date")}
         >
-          {editedTask.due_date}
+          {formatDate(editedTask.due_date)}
         </p>
       </div>
     );
   }
 }
+
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+};
