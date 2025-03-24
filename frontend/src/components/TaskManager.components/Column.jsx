@@ -8,17 +8,11 @@ import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { z } from "zod";
 import { useDispatch, useSelector } from "react-redux";
 import { createTask } from "../../redux/taskSlice";
+import { taskSchema } from "./validationSchema/taskSchama";
 
-const taskSchema = z.object({
-  name: z.string().min(3, "Title must be at least 3 characters"),
-  description: z.string().min(5, "Description must be at least 5 characters"),
-  due_date: z.string().refine((date) => !isNaN(Date.parse(date)), {
-    message: "Invalid date format",
-  }),
-});
+
 
 export function Column({ column, tasks, showForm, setShowFormFalse }) {
   const dispatch = useDispatch();
@@ -30,7 +24,7 @@ export function Column({ column, tasks, showForm, setShowFormFalse }) {
   } = useForm({
     resolver: zodResolver(taskSchema),
   });
-  const { setNodeRef } = useDroppable({ id: column.id });
+  const { setNodeRef, isOver } = useDroppable({ id: column.id });
   const [parent] = useAutoAnimate();
  
   const dropdownOpen = useSelector((state) => state.tasks.dropdownOpen);
@@ -45,7 +39,7 @@ export function Column({ column, tasks, showForm, setShowFormFalse }) {
   };
 
   return (
-    <div className="flex w-full md:w-80 flex-col rounded-lg bg-neutral-800 p-4">
+    <div className={`flex w-full md:w-80 flex-col rounded-lg ${ isOver?"bg-neutral-600": "bg-neutral-800"} p-4`}>
       <h2 className="mb-4 font-semibold text-neutral-100">{column.title}</h2>
 
       <AnimatePresence>
@@ -85,6 +79,7 @@ export function Column({ column, tasks, showForm, setShowFormFalse }) {
               {errors.due_date && (
                 <p className="text-red-500">{errors.due_date.message}</p>
               )}
+              <br/>
 
               {/* Buttons */}
               <div className="flex space-x-2">
@@ -97,7 +92,10 @@ export function Column({ column, tasks, showForm, setShowFormFalse }) {
                 <button
                   type="button"
                   className="px-4 py-2 bg-gray-500 rounded text-white hover:bg-gray-600 transition"
-                  onClick={setShowFormFalse}
+                  onClick={()=>{
+                    reset()
+                    setShowFormFalse()
+                  }}
                 >
                   Cancel
                 </button>

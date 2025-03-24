@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { BASE_URL } from "../paths/apiPaths";
 
 const initialState = {
   tasks: [],
@@ -132,7 +133,7 @@ export const fetchTasks = () => async (dispatch, getState) => {
   dispatch(fetchTasksStart());
   try {
     const token = getState().auth.token;
-    const response = await axios.get("http://127.0.0.1:8000/api/tasks", {
+    const response = await axios.get(`${BASE_URL}tasks`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     dispatch(fetchTasksSuccess(response.data));
@@ -151,7 +152,7 @@ export const createTask = (taskData) => async (dispatch, getState) => {
   try {
     const token = getState().auth.token;
     const response = await axios.post(
-      "http://127.0.0.1:8000/api/tasks",
+      `${BASE_URL}tasks`,
       taskData,
       {
         headers: { Authorization: `Bearer ${token}` },
@@ -174,7 +175,7 @@ export const updateTask = (task) => async (dispatch, getState) => {
   try {
     const token = getState().auth.token;
     const response = await axios.put(
-      `http://127.0.0.1:8000/api/tasks/${task.id}`,
+      `${BASE_URL}tasks/${task.id}`,
       task,
       {
         headers: { Authorization: `Bearer ${token}` },
@@ -194,7 +195,7 @@ export const deleteTask = (taskId) => async (dispatch, getState) => {
   dispatch(deleteTaskStart());
   try {
     const token = getState().auth.token;
-    await axios.delete(`http://127.0.0.1:8000/api/tasks/${taskId}`, {
+    await axios.delete(`${BASE_URL}tasks/${taskId}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     dispatch(deleteTaskSuccess(taskId));
@@ -213,7 +214,7 @@ export const filterTasks = (status) => async (dispatch, getState) => {
   try {
     const token = getState().auth.token;
     const response = await axios.get(
-      `http://127.0.0.1:8000/api/filter?status=${status}`,
+      `${BASE_URL}filter?status=${status}`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
@@ -236,7 +237,7 @@ export const sortTasks =
     try {
       const token = getState().auth.token;
       const response = await axios.get(
-        `http://127.0.0.1:8000/api/sort?sort_by=${sortBy}&sort_order=${sortOrder}`,
+        `${BASE_URL}sort?sort_by=${sortBy}&sort_order=${sortOrder}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -256,7 +257,7 @@ export const sortTasks =
     try {
       const token = getState().auth.token;
       const response = await axios.get(
-        `http://127.0.0.1:8000/api/search?query=${query}`,
+        `${BASE_URL}search?query=${query}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }

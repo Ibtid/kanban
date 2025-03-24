@@ -3,6 +3,8 @@ import { useDispatch } from "react-redux";
 import { filterTasks, sortTasks } from "../../redux/taskSlice";
 import { Filter, SortAsc, Calendar, PlusCircle, ThumbsUp, ThumbsDown } from "lucide-react";
 import { motion } from "framer-motion";
+import { filters } from "./consts/filter.options";
+import { sorts } from "./consts/sort.options";
 
 export function KanbanButtons({ showForm, setShowFormTrue }) {
   const dispatch = useDispatch();
@@ -27,19 +29,7 @@ export function KanbanButtons({ showForm, setShowFormTrue }) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const filters = [
-    { label: "All", value: "all", icon: Filter },
-    { label: "To Do", value: "To Do", icon: ThumbsDown },
-    { label: "In Progress", value: "In Progress", icon: ThumbsUp },
-    { label: "Done", value: "Done", icon: Calendar },
-  ];
 
-  const sorts = [
-    { label: "Created Date", value: "created_at", icon: Calendar },
-    { label: "Due Date", value: "due_date", icon: Calendar },
-  ];
-
-  // Handle Filter Change
   const handleFilterChange = (filter) => {
     const updatedFilters = selectedFilters.includes(filter)
       ? selectedFilters.filter((f) => f !== filter)
@@ -49,10 +39,10 @@ export function KanbanButtons({ showForm, setShowFormTrue }) {
     dispatch(filterTasks(updatedFilters.length ? updatedFilters.join(",") : "all"));
   };
 
-  // Handle Sort Change
+
   const handleSortChange = (sort) => {
     setSelectedSort(sort);
-    dispatch(sortTasks(sort, "asc")); // Default sorting order
+    dispatch(sortTasks(sort, "asc")); 
   };
 
   

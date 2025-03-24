@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useDraggable } from "@dnd-kit/core";
 import { useDispatch } from "react-redux";
 import { updateTask } from "../../redux/taskSlice";
+import { formatDate } from "../../utils/formatDate";
 
 export function TaskCard({ task }) {
   const { attributes, listeners, setNodeRef, transform, isDragging } =
@@ -21,8 +22,8 @@ export function TaskCard({ task }) {
       ? `translate(${transform.x}px, ${transform.y}px)`
       : undefined,
     backgroundColor: isDragging ? "rgb(51, 65, 85)" : "rgb(46, 46, 46)",
-    zIndex: isDragging ? 1001 : "auto", // Lower z-index but still above normal elements
-    position: isDragging ? "absolute" : "relative", // Helps with layering
+    zIndex: isDragging ? 1001 : "auto", 
+    position: isDragging ? "absolute" : "relative", 
     boxShadow: isDragging ? "0 4px 10px rgba(0, 0, 0, 0.2)" : "none",
   };
 
@@ -108,7 +109,7 @@ export function TaskCard({ task }) {
             value={editedTask.description}
             onChange={handleInputChange}
             onBlur={handleBlur}
-            onKeyDown={handleKeyDown} // Listen for Enter key
+            onKeyDown={handleKeyDown} 
             className="w-full bg-neutral-700 text-white p-1 rounded outline-none mt-2"
           />
         ) : (
@@ -172,26 +173,26 @@ export function TaskCard({ task }) {
         style={style}
       >
         <h3
-          className="font-medium text-neutral-100 cursor-pointer"
-          onClick={() => setIsEditing("name")}
+          className="font-medium text-neutral-100 cursor-pointer w-full"
+          onDoubleClick={() => setIsEditing("name")}  
         >
-          {editedTask.name}
+           {editedTask.name.trim() ? editedTask.name : <span className="text-neutral-500">Give a name</span>}
         </h3>
         <p
-          className="mt-2 text-sm text-neutral-400 cursor-pointer"
-          onClick={() => setIsEditing("description")}
+          className="mt-2 text-sm text-neutral-400 cursor-pointer w-full"
+          onDoubleClick={() => setIsEditing("description")}  
         >
-          {editedTask.description}
+           {editedTask.description.trim() ? editedTask.description : <span className="text-neutral-500">Give a description</span>}
         </p>
         <p
-          className="mt-2 text-xs text-neutral-400 cursor-pointer"
-          onClick={() => setIsEditing("status")}
+          className="mt-2 text-xs text-neutral-400 cursor-pointer w-full"
+          onDoubleClick={() => setIsEditing("status")} 
         >
           {editedTask.status}
         </p>
         <p
-          className="mt-2 text-xs text-neutral-400 cursor-pointer"
-          onClick={() => setIsEditing("due_date")}
+          className="mt-2 text-xs text-neutral-400 cursor-pointer w-full"
+          onDoubleClick={() => setIsEditing("due_date")}  
         >
           {formatDate(editedTask.due_date)}
         </p>
@@ -199,12 +200,3 @@ export function TaskCard({ task }) {
     );
   }
 }
-
-const formatDate = (dateString) => {
-  const date = new Date(dateString);
-  return date.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-};

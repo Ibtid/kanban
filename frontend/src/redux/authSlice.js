@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { BASE_URL } from "../paths/apiPaths";
 
 const initialState = {
   token: localStorage.getItem("token") || null,
@@ -39,7 +40,7 @@ export const { loginStart, loginSuccess, loginFailure, logout } = authSlice.acti
 export const loginUser = (userData) => async (dispatch) => {
   dispatch(loginStart());
   try {
-    const response = await axios.post("http://127.0.0.1:8000/api/login", userData);
+    const response = await axios.post(`${BASE_URL}login`, userData);
     dispatch(loginSuccess(response.data));
   } catch (error) {
     dispatch(loginFailure(error.response?.data?.message || "Login failed"));
@@ -49,13 +50,13 @@ export const loginUser = (userData) => async (dispatch) => {
 export const registerUser = (userData, navigate) => async (dispatch) => {
   dispatch(loginStart());
   try {
-    const response = await axios.post("http://127.0.0.1:8000/api/register", {
+    const response = await axios.post(`${BASE_URL}register`, {
       email: userData.email,
       password: userData.password,
-      password_confirmation: userData.confirmPassword, // Laravel requires this
+      password_confirmation: userData.confirmPassword, 
     });
 
-    dispatch(loginSuccess(response.data)); // Assuming you store token after registration
+    dispatch(loginSuccess(response.data)); 
   } catch (error) {
     dispatch(loginFailure(error.response?.data || "Registration failed"));
   }

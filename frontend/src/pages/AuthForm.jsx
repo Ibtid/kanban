@@ -3,7 +3,7 @@ import { LoginForm } from "../components/AuthForm.components/LoginForm";
 import { SignupForm } from "../components/AuthForm.components/Signup";
 
 
-export default function AuthForm() {
+const AuthForm = () => {
   const [isLogin, setIsLogin] = useState(true);
   return (
     <div className="max-w-md mx-auto mt-10 p-6 bg-neutral-800 rounded-xl shadow-lg">
@@ -21,3 +21,5 @@ export default function AuthForm() {
     </div>
   );
 }
+
+export default AuthForm

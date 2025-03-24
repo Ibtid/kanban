@@ -4,28 +4,24 @@ import { fetchTasks, updateTask, deleteTask } from "../../redux/taskSlice";
 import { DndContext } from "@dnd-kit/core";
 import { Column } from "./Column";
 import TrashZone from "./TrashZone";
-
-const COLUMNS = [
-  { id: "To Do", title: "To Do" },
-  { id: "In Progress", title: "In Progress" },
-  { id: "Done", title: "Done" },
-];
+import { COLUMNS } from "./consts/columns.data";
+import { logout } from "../../redux/authSlice";
 
 const KanbanBoard = ({ showForm, setShowFormFalse, formData, setFormData }) => {
   const dispatch = useDispatch();
-  const { tasks } = useSelector((state) => state.tasks);
-  const [isDragging, setIsDragging] = useState(false); // Track drag state
+  const { tasks,error } = useSelector((state) => state.tasks);
+  const [isDragging, setIsDragging] = useState(false); 
 
   useEffect(() => {
     dispatch(fetchTasks());
   }, [dispatch]);
 
-  function handleDragStart() {
-    setIsDragging(true); // Show TrashZone when dragging starts
+  const handleDragStart = () => {
+    setIsDragging(true); 
   }
 
-  function handleDragEnd(event) {
-    setIsDragging(false); // Hide TrashZone when dragging ends
+  const handleDragEnd = (event) => {
+    setIsDragging(false); 
 
     const { active, over } = event;
     if (!over) return;
@@ -34,7 +30,7 @@ const KanbanBoard = ({ showForm, setShowFormFalse, formData, setFormData }) => {
     const newStatus = over.id;
 
     if (newStatus === "trash") {
-      dispatch(deleteTask(taskId)); // Delete task when dropped in trash
+      dispatch(deleteTask(taskId));
     } else {
       const taskToUpdate = tasks.find((task) => task.id === taskId);
       if (!taskToUpdate) return;
@@ -44,8 +40,10 @@ const KanbanBoard = ({ showForm, setShowFormFalse, formData, setFormData }) => {
 
   return (
     <div className="p-4">
+      <div className="mb-4">
+      <i>Double click the texts you want to edit and drag the card to bottom corner to delete</i>
+      </div>
       <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-         {/* Show TrashZone only when dragging */}
          {isDragging && <TrashZone />}
         <div className="flex gap-8 flex-col md:flex-row">
           {COLUMNS.map((column) => (

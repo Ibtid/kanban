@@ -2,6 +2,8 @@ import { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Power, Search, X } from "lucide-react";
 import { searchTasks } from "../../redux/taskSlice";
+import { formatDate } from "../../utils/formatDate";
+import { logout } from "../../redux/authSlice";
 
 const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -44,6 +46,10 @@ const Navbar = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  const powerButtonClick = () => {
+    dispatch(logout())
+  }
 
   return (
     <div className="flex items-center justify-between px-4 py-2 w-full">
@@ -91,7 +97,7 @@ const Navbar = () => {
                         {task.description}
                       </small>
                       <small>{task.status}</small>
-                      <small>{task.due_date}</small>
+                      <small>{formatDate(task.due_date)}</small>
                     </div>
                   </div>
                 ))
@@ -103,9 +109,9 @@ const Navbar = () => {
         )}
       </div>
 
-      <button className="p-2 md:px-4 md:py-2 rounded-full border border-gray-500 text-gray-300 hover:bg-gray-700 transition flex items-center">
+      <button onClick={() => powerButtonClick()} className="p-2 md:px-4 md:py-2 rounded-full border border-gray-500 text-gray-300 hover:bg-gray-700 transition flex items-center">
         <Power className="w-4 h-4 md:w-5 md:h-5" />
-        <span className="hidden md:inline text-sm">Logout</span>
+        <span className="hidden ml-2 md:inline text-sm">Logout</span>
       </button>
     </div>
   );
