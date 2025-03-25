@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Log;
 
 class TaskController extends Controller
 {
-    // Get all tasks for the authenticated user
+    
     public function index()
     {
         Log::info('Task store request received');
@@ -143,8 +143,8 @@ class TaskController extends Controller
             return response()->json(['message' => 'Query parameter is required'], 400);
         }
     
-        $tasks = Task::where('user_id', auth()->id()) // Only search tasks of the authenticated user
-            ->where('name', 'LIKE', '%' . $searchQuery . '%') // Search for substring in the name
+        $tasks = Task::where('user_id', auth()->id()) 
+            ->where('name', 'LIKE', '%' . $searchQuery . '%') 
             ->get();
     
         return response()->json($tasks);
