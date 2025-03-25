@@ -82,99 +82,103 @@ export function TaskCard({ task }) {
 
   if (isEditing) {
     return (
-      <div
-        className="cursor-grab rounded-lg p-4 shadow-sm hover:shadow-md transition-colors duration-200"
-        style={style}
-      >
-        {isEditing === "name" ? (
-          <input
-            ref={inputRef}
-            type="text"
-            name="name"
-            value={editedTask.name}
-            onChange={handleInputChange}
-            onBlur={handleBlur}
-            onKeyDown={handleKeyDown} // Listen for Enter key
-            autoFocus
-            className="w-full bg-neutral-700 text-white p-1 rounded outline-none"
-          />
-        ) : (
-          <h3
-            className="font-medium text-neutral-100 cursor-pointer"
-            onClick={() => setIsEditing("name")}
-          >
-            {editedTask.name}
-          </h3>
-        )}
+      <>
+        <div
+          className="cursor-grab rounded-lg p-4 shadow-sm hover:shadow-md transition-colors duration-200"
+          style={style}
+        >
+          {isEditing === "name" ? (
+            <input
+              ref={inputRef}
+              type="text"
+              name="name"
+              value={editedTask.name}
+              onChange={handleInputChange}
+              onBlur={handleBlur}
+              onKeyDown={handleKeyDown} // Listen for Enter key
+              autoFocus
+              className="w-full bg-neutral-700 text-white p-1 rounded outline-none"
+            />
+          ) : (
+            <h3
+              className="font-medium text-neutral-100 cursor-pointer"
+              onClick={() => setIsEditing("name")}
+            >
+              {editedTask.name}
+            </h3>
+          )}
 
-        {isEditing === "description" ? (
-          <textarea
-            ref={inputRef}
-            name="description"
-            value={editedTask.description}
-            onChange={handleInputChange}
-            onBlur={handleBlur}
-            onKeyDown={handleKeyDown}
-            className="w-full bg-neutral-700 text-white p-1 rounded outline-none mt-2"
-          />
-        ) : (
-          <p
-            className="mt-2 text-sm text-neutral-400 cursor-pointer"
-            onClick={() => setIsEditing("description")}
-          >
-            {editedTask.description}
-          </p>
-        )}
+          {isEditing === "description" ? (
+            <textarea
+              ref={inputRef}
+              name="description"
+              value={editedTask.description}
+              onChange={handleInputChange}
+              onBlur={handleBlur}
+              onKeyDown={handleKeyDown}
+              className="w-full bg-neutral-700 text-white p-1 rounded outline-none mt-2"
+            />
+          ) : (
+            <p
+              className="mt-2 text-sm text-neutral-400 cursor-pointer"
+              onClick={() => setIsEditing("description")}
+            >
+              {editedTask.description}
+            </p>
+          )}
 
-        {isEditing === "status" ? (
-          <select
-            name="status"
-            value={editedTask.status}
-            onChange={handleInputChange}
-            onBlur={handleBlur}
-            className="w-full bg-neutral-700 text-white p-1 rounded outline-none mt-2"
-          >
-            <option value="To Do">To Do</option>
-            <option value="In Progress">In Progress</option>
-            <option value="Done">Done</option>
-          </select>
-        ) : (
-          <p
-            className="mt-2 text-xs text-neutral-400 cursor-pointer"
-            onClick={() => setIsEditing("status")}
-          >
-            {editedTask.status}
-          </p>
-        )}
+          {isEditing === "status" ? (
+            <select
+              name="status"
+              value={editedTask.status}
+              onChange={handleInputChange}
+              onBlur={handleBlur}
+              className="w-full bg-neutral-700 text-white p-1 rounded outline-none mt-2"
+            >
+              <option value="To Do">To Do</option>
+              <option value="In Progress">In Progress</option>
+              <option value="Done">Done</option>
+            </select>
+          ) : (
+            <p
+              className="mt-2 text-xs text-neutral-400 cursor-pointer"
+              onClick={() => setIsEditing("status")}
+            >
+              {editedTask.status}
+            </p>
+          )}
 
-        {isEditing === "due_date" ? (
-          <input
-            ref={inputRef}
-            type="date"
-            name="due_date"
-            value={editedTask.due_date}
-            onChange={handleInputChange}
-            onBlur={handleBlur}
-            onKeyDown={handleKeyDown} // Listen for Enter key
-            className="w-full bg-neutral-700 text-white p-1 rounded outline-none mt-2"
-          />
-        ) : (
-          <p
-            className="mt-2 text-xs text-neutral-400 cursor-pointer"
-            onClick={() => setIsEditing("due_date")}
-          >
-            {formatDate(editedTask.due_date)}
-          </p>
-        )}
-        <br/>
-        <p
-          className="mt-2 cursor-pointer p-1 rounded border-1 border-red-300 flex flex-row items-center justify-end"
+          {isEditing === "due_date" ? (
+            <input
+              ref={inputRef}
+              type="date"
+              name="due_date"
+              value={editedTask.due_date}
+              onChange={handleInputChange}
+              onBlur={handleBlur}
+              onKeyDown={handleKeyDown} // Listen for Enter key
+              className="w-full bg-neutral-700 text-white p-1 rounded outline-none mt-2"
+            />
+          ) : (
+            <p
+              className="mt-2 text-xs text-neutral-400 cursor-pointer"
+              onClick={() => setIsEditing("due_date")}
+            >
+              {formatDate(editedTask.due_date)}
+            </p>
+          )}
+        </div>
+        <br className="inline md:hidden" />
+        <button
+          ref={inputRef}
+          className="md:hidden w-full cursor-pointer p-2 rounded border-1 border-red-300 flex flex-row items-center justify-end"
           onClick={() => clickDelete()}
         >
           <Delete className="text-red-300" />
-          <div className="text-red-300">Delete</div>
-        </p>
-      </div>
+          <div className="text-red-300">Delete {editedTask.name}</div>
+        </button>
+        <br className="inline md:hidden" />
+      </>
     );
   } else {
     return (
